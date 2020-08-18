@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d29c8d28-e3fe-439d-a7a5-af745dc0893f" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="4c511f25" />
+  <component name="ProjectId" id="1ftgQXXLEmMq9NfGphAQicThg8c" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DEBUGGABLE_DEVICE" value="oneplus-oneplus_a6000-4c511f25" />
+    <property name="DEBUGGABLE_PROCESS" value="com.example.android_media_store_example" />
+    <property name="DEBUGGER_ID" value="Java" />
+    <property name="SHOW_ALL_PROCESSES" value="false" />
+    <property name="dart.analysis.tool.window.force.activate" value="false" />
+    <property name="io.flutter.reload.alreadyRun" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d29c8d28-e3fe-439d-a7a5-af745dc0893f" name="Default Changelist" comment="" />
+      <created>1597042786200</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1597042786200</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="808" y="409" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1597045344299">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="808" y="409" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1920.1040/120.-1050.1680.1010@0.0.1920.1040" timestamp="1597045344299" />
+    <state x="815" y="285" key="AndroidProcessChooserDialog" timestamp="1597047955918">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="815" y="285" key="AndroidProcessChooserDialog/0.0.1920.1040/120.-1050.1680.1010@0.0.1920.1040" timestamp="1597047955918" />
+    <state width="1877" height="258" key="GridCell.Tab.0.bottom" timestamp="1597742033660">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="258" key="GridCell.Tab.0.bottom/0.0.1920.1040/120.-1050.1680.1010@0.0.1920.1040" timestamp="1597742033660" />
+    <state width="1877" height="258" key="GridCell.Tab.0.center" timestamp="1597742033660">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="258" key="GridCell.Tab.0.center/0.0.1920.1040/120.-1050.1680.1010@0.0.1920.1040" timestamp="1597742033660" />
+    <state width="1877" height="258" key="GridCell.Tab.0.left" timestamp="1597742033660">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="258" key="GridCell.Tab.0.left/0.0.1920.1040/120.-1050.1680.1010@0.0.1920.1040" timestamp="1597742033660" />
+    <state width="1877" height="258" key="GridCell.Tab.0.right" timestamp="1597742033660">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="258" key="GridCell.Tab.0.right/0.0.1920.1040/120.-1050.1680.1010@0.0.1920.1040" timestamp="1597742033660" />
+    <state x="656" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1597736760682">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="656" y="344" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/120.-1050.1680.1010@0.0.1920.1040" timestamp="1597736760682" />
+    <state x="172" y="193" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1597047902002">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="172" y="193" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040/120.-1050.1680.1010@0.0.1920.1040" timestamp="1597047902002" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1597740359169">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/120.-1050.1680.1010@0.0.1920.1040" timestamp="1597740359169" />
+  </component>
+</project>
