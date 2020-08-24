@@ -1,4 +1,5 @@
 # android_media_store
+ABANDONED, USE [flutter_audio_query](https://pub.dev/packages/flutter_audio_query) INSTEAD
 
 Access MediaStore on Android
 
