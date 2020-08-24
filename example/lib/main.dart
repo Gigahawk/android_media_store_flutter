@@ -1,3 +1,4 @@
+import 'package:android_media_store_example/views/homeview.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -7,7 +8,26 @@ import 'package:android_media_store/song.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MediaStoreExample());
+}
+
+class MediaStoreExample extends StatefulWidget {
+  @override
+  _MediaStoreExampleState createState() => _MediaStoreExampleState();
+}
+class _MediaStoreExampleState extends State<MediaStoreExample> {
+  @override
+  void initState() {
+    super.initState();
+    Permission.storage.request();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomeView()
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -66,7 +86,7 @@ class _MyAppState extends State<MyApp> {
             var song = _songs[idx];
             return Column(
               children: [
-                Text(song.title),
+                Text(song.name),
                 FutureBuilder(
                   builder: (context, snapshot) {
                     if(snapshot.connectionState == ConnectionState.none &&

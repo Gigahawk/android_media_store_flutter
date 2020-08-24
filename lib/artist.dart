@@ -11,4 +11,11 @@ class Artist {
     @required this.numAlbums,
     @required this.numTracks,
   });
+
+  Artist.fromMap(Map a) {
+    id = a['id'];
+    name = a['name'];
+    numAlbums = a['numAlbums'];
+    numTracks = a['numTracks'];
+  }
 }

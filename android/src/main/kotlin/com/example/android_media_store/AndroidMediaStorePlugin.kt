@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import android.provider.MediaStore.Audio.AudioColumns.ARTIST_ID
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -21,7 +22,7 @@ public class AndroidMediaStorePlugin: FlutterPlugin, MethodCallHandler, Activity
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
-  private lateinit var channel : MethodChannel
+  private lateinit var channel: MethodChannel
   private lateinit var context: Context
   private lateinit var activity: Activity
 
@@ -34,6 +35,7 @@ public class AndroidMediaStorePlugin: FlutterPlugin, MethodCallHandler, Activity
   override fun onAttachedToActivity(@NonNull binding: ActivityPluginBinding) {
     activity = binding.activity
   }
+
   override fun onDetachedFromActivity() {
     TODO("Not yet implemented")
   }
@@ -41,10 +43,10 @@ public class AndroidMediaStorePlugin: FlutterPlugin, MethodCallHandler, Activity
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
     TODO("Not yet implemented")
   }
+
   override fun onDetachedFromActivityForConfigChanges() {
     TODO("Not yet implemented")
   }
-
 
 
   // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -65,11 +67,12 @@ public class AndroidMediaStorePlugin: FlutterPlugin, MethodCallHandler, Activity
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    when(call.method) {
+    when (call.method) {
       "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
       "getAlbums" -> result.success(getAlbums())
       "getSongs" -> result.success(getSongs())
       "getArtistById" -> result.success(getArtistById(call.argument<Int>("id")))
+      "getAlbumById" -> result.success(getAlbumById(call.argument<Int>("id")))
       else -> result.notImplemented()
     }
   }
@@ -78,53 +81,84 @@ public class AndroidMediaStorePlugin: FlutterPlugin, MethodCallHandler, Activity
     channel.setMethodCallHandler(null)
   }
 
-  fun getAlbums() {
-  }
 
   fun getArtistById(id: Int?): Map<String, Any>? {
-    if(id == null)
+    if (id == null)
       return null
     val uri: Uri = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
     val selection = MediaStore.Audio.Artists._ID + "=?"
-    val cursor: Cursor = context.contentResolver.query(
+    val cursor: Cursor? = context.contentResolver.query(
             uri,
             null,
             selection,
             arrayOf(id.toString()),
             null)
 
-    if(cursor != null && cursor.moveToFirst()){
-      val nameIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST)
-      val numAlbumsIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS)
-      val numTracksIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)
-
-      val name: String = cursor.getString(nameIdx)
-      val numAlbums: Int = cursor.getInt(numAlbumsIdx)
-      val numTracks: Int = cursor.getInt(numTracksIdx)
-
-      return mapOf(
-              "id" to id,
-              "name" to name,
-              "numAlbums" to numAlbums,
-              "numTracks" to numTracks
-      )
-    }
+    val artists = getArtistMaps(cursor)
+    if(artists.size == 1)
+      return artists[0]
     return null
   }
 
-  fun getSongs(): MutableList<Map<String, Any>> {
-    val list: MutableList<Map<String, Any>> = mutableListOf()
+  fun getAlbumById(id: Int?): Map<String, Any>? {
+    if (id == null)
+      return null
+    val uri: Uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
+    val selection = MediaStore.Audio.Albums._ID + "=?"
+    val cursor: Cursor? = context.contentResolver.query(
+            uri,
+            null,
+            selection,
+            arrayOf(id.toString()),
+            null)
+
+    val albums = getAlbumMaps(cursor)
+    if(albums.size == 1)
+      return albums[0]
+    return null
+  }
+
+  fun getAlbums(): List<Map<String, Any>> {
+    val uri: Uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
+    val sortOrder = MediaStore.Audio.Albums.ALBUM + " ASC"
+    val cursor: Cursor? = context.contentResolver.query(
+            uri,
+            null,
+            null,
+            null,
+            sortOrder)
+    return getAlbumMaps(cursor)
+  }
+
+  fun getArtists(): List<Map<String, Any>> {
+    val uri: Uri = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
+    val sortOrder = MediaStore.Audio.Artists.ARTIST + " ASC"
+    val cursor: Cursor? = context.contentResolver.query(
+            uri,
+            null,
+            null,
+            null,
+            sortOrder)
+    return getArtistMaps(cursor)
+  }
+
+  fun getSongs(): List<Map<String, Any>> {
     val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
     val selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0"
     val sortOrder = MediaStore.Audio.Media.TITLE + " ASC"
-    val cursor: Cursor = context.contentResolver.query(
+    val cursor: Cursor? = context.contentResolver.query(
             uri,
             null,
             selection,
             null,
             sortOrder
     )
-    if(cursor != null && cursor.moveToFirst()) {
+    return getSongMaps(cursor)
+  }
+
+  private fun getSongMaps(cursor: Cursor?): List<Map<String, Any>> {
+    val list: MutableList<Map<String, Any>> = mutableListOf()
+    if (cursor != null && cursor.moveToFirst()) {
       val idIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
       val titleIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
       val albumIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
@@ -135,7 +169,7 @@ public class AndroidMediaStorePlugin: FlutterPlugin, MethodCallHandler, Activity
 
       do {
         val id: Long = cursor.getLong(idIdx)
-        val title: String = cursor.getString(titleIdx)
+        val name: String = cursor.getString(titleIdx)
         val albumId: Long = cursor.getLong(albumIdx)
         val artistId: Long = cursor.getLong(artistIdx)
 //        val genreId
@@ -144,14 +178,71 @@ public class AndroidMediaStorePlugin: FlutterPlugin, MethodCallHandler, Activity
 
         list.add(mapOf(
                 "id" to id,
-                "title" to title,
+                "name" to name,
                 "albumId" to albumId,
                 "artistId" to artistId,
                 "track" to track,
                 "year" to year
         ))
-      } while(cursor.moveToNext())
+      } while (cursor.moveToNext())
     }
-    return list
+    return list.toList()
+  }
+
+  private fun getArtistMaps(cursor: Cursor?): List<Map<String, Any>> {
+    val list: MutableList<Map<String, Any>> = mutableListOf()
+    if (cursor != null && cursor.moveToFirst()) {
+      val idIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Artists._ID)
+      val nameIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST)
+      val numAlbumsIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS)
+      val numTracksIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)
+
+      do {
+        val id: Long = cursor.getLong(idIdx)
+        val name: String = cursor.getString(nameIdx)
+        val numAlbums: Int = cursor.getInt(numAlbumsIdx)
+        val numTracks: Int = cursor.getInt(numTracksIdx)
+        list.add(mapOf(
+                "id" to id,
+                "name" to name,
+                "numAlbums" to numAlbums,
+                "numTracks" to numTracks
+        ))
+      } while (cursor.moveToNext())
+    }
+    return list.toList()
+  }
+
+  private fun getAlbumMaps(cursor: Cursor?): List<Map<String, Any>> {
+    val list: MutableList<Map<String, Any>> = mutableListOf()
+    if (cursor != null && cursor.moveToFirst()) {
+      val idIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Artists._ID)
+      val nameIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
+      val artistNameIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)
+      val artistIdIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST_ID)
+      val firstYearIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR)
+      val lastYearIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.LAST_YEAR)
+      val numTracksIdx: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS)
+
+      do {
+        val id: Long = cursor.getLong(idIdx)
+        val name: String = cursor.getString(nameIdx)
+        val artistName: String = cursor.getString(artistNameIdx)
+        val artistId: Long = cursor.getLong(artistIdIdx)
+        val firstYear: Int = cursor.getInt(firstYearIdx)
+        val lastYear: Int = cursor.getInt(lastYearIdx)
+        val numTracks: Int = cursor.getInt(numTracksIdx)
+        list.add(mapOf(
+                "id" to id,
+                "name" to name,
+                "artistName" to artistName,
+                "artistId" to artistId,
+                "firstYear" to firstYear,
+                "lastYear" to lastYear,
+                "numTracks" to numTracks
+        ))
+      } while (cursor.moveToNext())
+    }
+    return list.toList()
   }
 }

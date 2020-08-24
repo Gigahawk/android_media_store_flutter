@@ -5,6 +5,7 @@
 
 import 'dart:async';
 
+import 'package:android_media_store/album.dart';
 import 'package:android_media_store/artist.dart';
 import 'package:android_media_store/song.dart';
 import 'package:flutter/services.dart';
@@ -19,28 +20,36 @@ class AndroidMediaStore {
   }
   
   static Future get albums async {
-    return await _channel.invokeMethod('getAlbums');
+    List albumMaps =  await _channel.invokeMethod('getAlbums');
+    Iterable<Album> albums = albumMaps.map((a) => Album.fromMap(a));
+    return albums;
+  }
+
+  static Future<Iterable<Artist>> get artists async {
+    List artistMaps =  await _channel.invokeMethod('getArtists');
+    Iterable<Artist> artists = artistMaps.map((a) => Artist.fromMap(a));
+    return artists;
   }
 
   static Future<Iterable<Song>> get songs async {
     List songMaps =  await _channel.invokeMethod('getSongs');
-    Iterable<Song> songs = songMaps.map((s) => Song(
-        id: s['id'], title: s['title'], albumId: s['albumId'],
-        artistId: s['artistId'], track: s['track'], year: s['year']));
+    Iterable<Song> songs = songMaps.map((s) => Song.fromMap(s));
     return songs;
   }
 
   static Future<Artist> getArtistById(int id) async {
     Map am = await _channel.invokeMethod(
         'getArtistById', {'id': id});
-    Artist artist = Artist(
-        id: am['id'], name: am['name'],
-        numAlbums: am['numAlbums'], numTracks: am['numTracks']);
+    Artist artist = Artist.fromMap(am);
     return artist;
   }
 
-  static Future get artists async {
-    return await _channel.invokeMethod('getArtists');
+  static Future<Album> getAlbumById(int id) async {
+    Map am = await _channel.invokeMethod(
+        'getAlbumById', {'id': id});
+    Album album = Album.fromMap(am);
+    return album;
   }
+
 }
 
